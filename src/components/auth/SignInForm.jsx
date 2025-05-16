@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { validate_signin_form } from "@/schema";
+import { api } from "@/utils";
+import { useNavigate } from "react-router";
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const initialValues = {
     email: "",
@@ -14,13 +17,16 @@ const SignInForm = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log("Submitted:", values);
-    setTimeout(() => {
-      setSubmitting(false);
-    }, 1000);
-
-    // Handle form submission here
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const { email, password } = values;
+    const response = await api.post("/signin", {
+      email,
+      password,
+    });
+    setSubmitting(false);
+    if (response.status === 200) {
+      navigate("/");
+    }
   };
 
   return (

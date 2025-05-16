@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { api, snackbar } from "@/utils";
 import { validate_signup_form } from "@/schema";
-import axios from "axios";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,14 +16,22 @@ export default function SignupForm() {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const { username, name, email, age, password } = values;
-    const { data, status } = await axios.post(
-      `${import.meta.env.VITE_API_URL}/signup`,
-      { username, name, email, age, password }
-    );
-
-    setSubmitting(false);
-    console.log(data, status, "response axios");
+    try {
+      const { username, name, email, age, password } = values;
+      const { status, message } = await api.post("/signup", {
+        username,
+        name,
+        email,
+        age,
+        password,
+      });
+      setSubmitting(false);
+      if (status === 201) snackbar(message, "success", 'top-center');
+    } catch (error) {
+      const statusCode = error.status;
+      const errorMessage = error.message;
+      snackbar(`Error ${statusCode}: ${errorMessage}`, "error");
+    }
   };
 
   return (

@@ -25,7 +25,7 @@ const Navbar = ({ user }) => {
           <div className="text-blue-500 text-2xl">
             <i className="fas fa-comment-dots"></i>
           </div>
-          <h1 className="text-xl font-semibold">SocialFeed</h1>
+          <h1 className="text-xl font-semibold">Postify</h1>
         </div>
 
         <div className="flex items-center space-x-4">

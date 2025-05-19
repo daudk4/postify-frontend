@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(response.data);
       }
     } catch (error) {
-      if (error.expired) {
+      if (!error.expired) {
         logout();
       }
     }

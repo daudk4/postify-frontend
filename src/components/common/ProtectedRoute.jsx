@@ -1,37 +1,28 @@
-import { api } from "@/utils";
-import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router";
+import React from "react";
 
-export const ProtectedRoute = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+import { useAuth } from "@/contexts/auth";
+import { Navigate, Outlet, useLocation } from "react-router";
 
-  useEffect(() => {
-    async function checkUserAuthenticated() {
-      try {
-        setLoading(true);
-        const { status, data } = await api.get("/auth/check");
-        if (status === 200) {
-          setUser(data);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    checkUserAuthenticated();
-  }, []);
+export const ProtectedRoute = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-zinc-900 text-white">
+        <div className="text-center">
+          <div className="mb-2">Loading...</div>
+          <div className="animate-spin h-8 w-8 border-t-2 border-b-2 border-blue-500 rounded-full mx-auto"></div>
+        </div>
+      </div>
+    );
   }
 
-  console.log(user);
-
-  if (!user?.userId) {
-    return <Navigate to={"/signin"} />;
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  return <div>{children}</div>;
+  return <Outlet />;
 };
+
+export default ProtectedRoute;

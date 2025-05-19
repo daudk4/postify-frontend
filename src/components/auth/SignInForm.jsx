@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { validate_signin_form } from "@/schema";
-import { api } from "@/utils";
+import { api, setAuthToken } from "@/utils";
 import { useNavigate } from "react-router";
+import { useAuth } from "@/contexts/auth";
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const initialValues = {
     email: "",
@@ -18,14 +21,20 @@ const SignInForm = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const { email, password } = values;
-    const response = await api.post("/signin", {
-      email,
-      password,
-    });
-    setSubmitting(false);
-    if (response.status === 200) {
-      navigate("/");
+    try {
+      setError("");
+      const { email, password } = values;
+
+      const result = await login(email, password);
+      if (result.success) {
+        navigate("/");
+      } else {
+        setError(result.message || "Sign in failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Sign in failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 

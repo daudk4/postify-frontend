@@ -47,16 +47,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     initAuth();
-
-    // const handleTokenRefresh = () => {
-    //   updateUser();
-    // };
-
-    // window.addEventListener("tokenRefreshed", handleTokenRefresh);
-
-    // return () => {
-    //   window.removeEventListener("tokenRefreshed", handleTokenRefresh);
-    // };
   }, []);
 
   const login = async (email, password) => {
@@ -99,6 +89,7 @@ export const AuthProvider = ({ children }) => {
     initialized,
     login,
     logout,
+    updateUser,
     isAuthenticated: !!currentUser,
   };
 

@@ -1,11 +1,22 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { validate_post_form } from "@/schema";
+import { api, snackbar } from "@/utils";
+import { useAuth } from "@/contexts/auth";
 
 const initialValues = {
   content: "",
 };
 const CreatePost = () => {
-  async function handleSubmit(values, { setSubmitting }) {}
+  const { updateUser } = useAuth();
+  async function handleSubmit(values, { setSubmitting }) {
+    const { content } = values;
+    const res = await api.post("/post", { content });
+    if (res.status === 200) {
+      snackbar(res.message, "success");
+    }
+    setSubmitting(false);
+    await updateUser();
+  }
   return (
     <div className="bg-zinc-800 rounded-xl p-4 shadow-lg border border-zinc-700 mb-6 animate-in">
       <h3 className="font-medium mb-4">Create a new post</h3>

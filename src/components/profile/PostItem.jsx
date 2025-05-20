@@ -1,3 +1,5 @@
+import { PostActions } from "@/components/profile/PostActions";
+
 const PostItem = ({ post, user }) => (
   <div className="post bg-zinc-800 rounded-xl shadow-lg border border-zinc-700 overflow-hidden animate-in">
     <div className="p-4">
@@ -17,6 +19,8 @@ const PostItem = ({ post, user }) => (
           <p className="mt-2 text-sm">{post.content}</p>
         </div>
       </div>
+      <div className="h-[1px] bg-zinc-500 mt-4"></div>
+      <PostActions />
     </div>
   </div>
 );

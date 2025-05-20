@@ -19,7 +19,6 @@ api.interceptors.response.use(
     return newResponse;
   },
   async (error) => {
-    console.log(error, "error in api");
     const originalRequest = error.config;
 
     // Handle token expiration and refresh
@@ -56,13 +55,7 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // If refresh fails, clear tokens and redirect to login
-        localStorage.removeItem("accessToken");
-
-        // Optional: redirect to login page
-        if (window.location.pathname !== "/signin") {
-          window.location.href = "/signin";
-        }
+      console.log(refreshError);
       }
     }
 

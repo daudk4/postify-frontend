@@ -1,21 +1,12 @@
 import React from "react";
-import { api, snackbar } from "@/utils";
+import { useAuth } from "@/contexts/auth";
 import UserAvatar from "@/components/profile/UserAvatar";
-import { useNavigate } from "react-router";
 
 const Navbar = ({ user }) => {
-  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   async function handleLogout() {
-    try {
-      const { status, message } = await api.get("/logout");
-      if (status === 200) {
-        navigate("/signin");
-        snackbar(message, "success");
-      }
-    } catch (error) {
-      snackbar(error.message, "error");
-    }
+    await logout();
   }
 
   return (
